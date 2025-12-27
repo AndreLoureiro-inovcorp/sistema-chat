@@ -14,17 +14,17 @@ class MessageController extends Controller
 
         $messages = Message::where(function ($query) use ($authUserId, $user) {
             $query->where('user_id', $authUserId)
-                  ->where('messageable_type', User::class)
-                  ->where('messageable_id', $user->id);
+                ->where('messageable_type', User::class)
+                ->where('messageable_id', $user->id);
         })
-        ->orWhere(function ($query) use ($authUserId, $user) {
-            $query->where('user_id', $user->id)
-                  ->where('messageable_type', User::class)
-                  ->where('messageable_id', $authUserId);
-        })
-        ->with('user')
-        ->oldest()
-        ->get();
+            ->orWhere(function ($query) use ($authUserId, $user) {
+                $query->where('user_id', $user->id)
+                    ->where('messageable_type', User::class)
+                    ->where('messageable_id', $authUserId);
+            })
+            ->with('user')
+            ->oldest()
+            ->get();
 
         return response()->json($messages);
     }

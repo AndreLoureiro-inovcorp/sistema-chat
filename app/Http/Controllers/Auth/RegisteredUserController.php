@@ -42,6 +42,11 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $generalRoom = \App\Models\Room::where('name', 'Geral')->first();
+        if ($generalRoom) {
+            $generalRoom->users()->attach($user->id);
+        }
+
         event(new Registered($user));
 
         Auth::login($user);

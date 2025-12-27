@@ -17,7 +17,7 @@ const sendMessage = async () => {
         content: newMessage.value,
         receiver_id: props.selectedUser.id,
     });
-    
+
     newMessage.value = '';
     emit('messageSent');
 };
@@ -32,20 +32,14 @@ const handleKeypress = (event) => {
 
 <template>
     <div class="p-4 border-t bg-base-100">
-        <div class="flex gap-2">
-            <input
-                v-model="newMessage"
-                type="text"
-                placeholder="Escrever mensagem..."
-                class="input input-bordered w-full"
-                @keypress="handleKeypress"
-            />
+        <div class="flex items-center gap-3 max-w-3xl mx-auto">
+            <input v-model="newMessage" type="text" placeholder="Escreve a mensagem..."
+                class="flex-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                @keypress="handleKeypress" />
 
             <button
-                class="btn btn-primary"
-                :disabled="!newMessage.trim()"
-                @click="sendMessage"
-            >
+                class="px-6 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed"
+                :disabled="!newMessage.trim()" @click="sendMessage">
                 Enviar
             </button>
         </div>

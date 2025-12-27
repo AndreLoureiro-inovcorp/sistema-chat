@@ -11,7 +11,7 @@ const messages = ref([]);
 
 const fetchMessages = async () => {
     if (!props.selectedUser) return;
-    
+
     const response = await axios.get(`/messages/${props.selectedUser.id}`);
     messages.value = response.data;
 };
@@ -26,34 +26,23 @@ watch(() => props.selectedUser, () => {
 <template>
     <div class="flex-1 flex flex-col">
         <div v-if="selectedUser" class="flex-1 flex flex-col">
-            <!-- Header -->
+
             <div class="p-4 border-b font-semibold">
                 {{ selectedUser.name }}
             </div>
 
-            <!-- Mensagens -->
             <div class="flex-1 p-4 overflow-y-auto bg-base-200">
-                <!-- Sem mensagens -->
                 <div v-if="messages.length === 0" class="alert alert-info">
                     Sem mensagens ainda. Envia a primeira!
                 </div>
 
-                <!-- Lista -->
                 <div v-else class="space-y-2">
-                    <div
-                        v-for="message in messages"
-                        :key="message.id"
-                        class="chat"
-                        :class="message.user_id === $page.props.auth.user.id
-                            ? 'chat-end'
-                            : 'chat-start'"
-                    >
-                        <div 
-                            class="chat-bubble"
-                            :class="message.user_id === $page.props.auth.user.id
-                                ? 'chat-bubble-primary'
-                                : 'chat-bubble-secondary'"
-                        >
+                    <div v-for="message in messages" :key="message.id" class="chat" :class="message.user_id === $page.props.auth.user.id
+                        ? 'chat-end'
+                        : 'chat-start'">
+                        <div class="chat-bubble" :class="message.user_id === $page.props.auth.user.id
+                            ? 'chat-bubble-primary'
+                            : 'chat-bubble-secondary'">
                             <p class="text-sm">{{ message.content }}</p>
                             <span class="text-xs opacity-70 block mt-1">
                                 {{
@@ -69,14 +58,9 @@ watch(() => props.selectedUser, () => {
                 </div>
             </div>
 
-            <!-- Input -->
-            <MessageInput 
-                :selectedUser="selectedUser" 
-                @messageSent="fetchMessages" 
-            />
+            <MessageInput :selectedUser="selectedUser" @messageSent="fetchMessages" />
         </div>
 
-        <!-- Placeholder -->
         <div v-else class="flex-1 flex items-center justify-center text-gray-500">
             Seleciona um utilizador para começar a conversar
         </div>

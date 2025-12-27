@@ -17,6 +17,7 @@ const selectUser = (user) => {
 </script>
 
 <template>
+
     <Head title="Chat" />
 
     <AuthenticatedLayout>
@@ -24,11 +25,7 @@ const selectUser = (user) => {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="card bg-base-100 shadow">
                     <div class="flex h-[600px]">
-                        <UserList
-                            :users="users"
-                            :selectedUser="selectedUser"
-                            @selectUser="selectUser"
-                        />
+                        <UserList :users="users" :selectedUser="selectedUser" @selectUser="selectUser" />
 
                         <ChatWindow :selectedUser="selectedUser" />
                     </div>

@@ -1,11 +1,12 @@
 <?php
 
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoomController;
+use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Models\User;
-use App\Http\Controllers\MessageController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -24,13 +25,33 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     Route::get('/chat', function () {
-        return Inertia::render('Chat/Index', ['users' => User::where('id', '!=', auth()->id())->get(),]);
+        return Inertia::render('Chat/Index', ['users' => User::where('id', '!=', auth()->id())->get()]);
     })->name('chat');
-    
+
     Route::get('/messages/{user}', [MessageController::class, 'index']);
     Route::post('/messages', [MessageController::class, 'store']);
+
+    Route::get('/rooms', [RoomController::class, 'index'])->name('rooms.index');
+    Route::get('/rooms/create', function () {
+        return Inertia::render('Rooms/Create', [
+            'users' => User::where('id', '!=', auth()->id())->get(),
+        ]);
+    })->name('rooms.create');
+    Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
+    Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
+    Route::get('/rooms/{room}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
+    Route::put('/rooms/{room}', [RoomController::class, 'update'])->name('rooms.update');
+    Route::delete('/rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
+
+    Route::get('/rooms/{room}/messages', [RoomController::class, 'getMessages']);
+    Route::post('/rooms/{room}/messages', [RoomController::class, 'sendMessage']);
+
+    Route::post('/rooms/{room}/members/{user}', [RoomController::class, 'addMember'])->name('rooms.members.add');
+    Route::delete('/rooms/{room}/members/{user}', [RoomController::class, 'removeMember'])->name('rooms.members.remove');
+
+    Route::get('/rooms/{room}/available-users', [RoomController::class, 'availableUsers']);
 });
 
 require __DIR__.'/auth.php';
