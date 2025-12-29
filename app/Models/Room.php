@@ -13,6 +13,7 @@ class Room extends Model
         'name',
         'avatar',
         'created_by',
+        'invite_token',
     ];
 
     public function creator(): BelongsTo

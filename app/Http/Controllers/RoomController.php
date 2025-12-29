@@ -44,6 +44,7 @@ class RoomController extends Controller
             'name' => $validated['name'],
             'avatar' => $avatarPath,
             'created_by' => auth()->id(),
+            'invite_token' => \Illuminate\Support\Str::random(32),
         ]);
 
         $room->users()->attach(auth()->id());

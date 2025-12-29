@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 
@@ -15,6 +15,13 @@ const form = ref({
 
 const submitting = ref(false);
 const avatarPreview = ref(props.room.avatar ? `/storage/${props.room.avatar}` : null);
+
+const inviteLink = computed(() => {
+    if (typeof window === 'undefined' || !props.room.invite_token) {
+        return '';
+    }
+    return `${window.location.origin}/salas/convite/${props.room.invite_token}`;
+});
 
 const handleAvatarChange = (event) => {
     const file = event.target.files[0];
@@ -112,11 +119,16 @@ props.availableUsers.forEach(user => {
                                         <input type="file" accept="image/jpeg,image/png,image/jpg,image/webp"
                                             @change="handleAvatarChange"
                                             class="file-input file-input-bordered w-full" />
-                                        <p class="text-xs text-gray-500 mt-2">
-                                            JPG, PNG ou WebP. Máx 2MB.
-                                        </p>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div v-if="room.invite_token && inviteLink" class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">Link de Convite: </span>
+                                </label>
+                                <input type="text" :value="inviteLink" readonly
+                                    class="input input-bordered w-full bg-gray-50" />
                             </div>
 
                             <div class="form-control">
@@ -134,14 +146,22 @@ props.availableUsers.forEach(user => {
                                         <div v-for="user in allUsers" :key="user.id"
                                             class="flex items-center justify-between p-3 hover:bg-base-200 rounded">
                                             <div class="flex items-center gap-3">
-                                                <div class="avatar placeholder">
-                                                    <div class="bg-neutral text-neutral-content rounded-full w-10">
-                                                        <span class="text-sm">{{ user.name.charAt(0) }}</span>
+                                                <div class="flex items-center gap-3">
+                                                    <div class="avatar">
+                                                        <div v-if="user.avatar" class="w-10 rounded-full">
+                                                            <img :src="`/storage/${user.avatar}`" :alt="user.name"
+                                                                class="object-cover" />
+                                                        </div>
+                                                        <div v-else class="avatar placeholder">
+                                                            <div
+                                                                class="bg-neutral text-neutral-content rounded-full w-10">
+                                                                <span class="text-sm">{{ user.name.charAt(0) }}</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div>
-                                                    <div class="font-medium">{{ user.name }}</div>
-                                                    <div class="text-xs text-gray-500">{{ user.email }}</div>
+                                                    <div>
+                                                        <div class="font-medium">{{ user.name }}</div>
+                                                    </div>
                                                 </div>
                                             </div>
 

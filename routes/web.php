@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\Room;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -53,6 +54,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/rooms/{room}/members/{user}', [RoomController::class, 'removeMember'])->name('rooms.members.remove');
 
     Route::get('/rooms/{room}/available-users', [RoomController::class, 'availableUsers']);
+
+    Route::get('/salas/convite/{token}', function ($token) {
+        $room = Room::where('invite_token', $token)->firstOrFail();
+
+        if (! $room->users->contains(auth()->id())) {
+            $room->users()->attach(auth()->id());
+        }
+
+        return redirect()->route('rooms.index')->with('success', 'Entraste na sala '.$room->name);
+    })->name('rooms.invite.accept');
 });
 
 require __DIR__.'/auth.php';

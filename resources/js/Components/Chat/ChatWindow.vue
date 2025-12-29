@@ -21,6 +21,14 @@ watch(() => props.selectedUser, () => {
         fetchMessages();
     }
 }, { immediate: true });
+
+const linkify = (text) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, (url) => {
+        return `<a href="${url}" target="_blank" class="text-blue-500 underline hover:text-blue-700">${url}</a>`;
+    });
+};
+
 </script>
 
 <template>
@@ -60,7 +68,7 @@ watch(() => props.selectedUser, () => {
                         <div class="chat-bubble" :class="message.user_id === $page.props.auth.user.id
                             ? 'chat-bubble-primary'
                             : 'chat-bubble-secondary'">
-                            <p class="text-sm">{{ message.content }}</p>
+                            <p class="text-sm" v-html="linkify(message.content)"></p>
                             <span class="text-xs opacity-70 block mt-1">
                                 {{
                                     new Date(message.created_at)

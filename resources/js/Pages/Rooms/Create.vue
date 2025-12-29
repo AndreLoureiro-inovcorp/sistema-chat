@@ -87,9 +87,6 @@ const toggleMember = (userId) => {
                                         <input type="file" accept="image/jpeg,image/png,image/jpg,image/webp"
                                             @change="handleAvatarChange"
                                             class="file-input file-input-bordered w-full" />
-                                        <p class="text-xs text-gray-500 mt-2">
-                                            JPG, PNG ou WebP. Máx 2MB.
-                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -111,9 +108,15 @@ const toggleMember = (userId) => {
                                                 :checked="form.member_ids.includes(user.id)"
                                                 @change="toggleMember(user.id)" />
                                             <div class="flex items-center gap-2">
-                                                <div class="avatar placeholder">
-                                                    <div class="bg-neutral text-neutral-content rounded-full w-8">
-                                                        <span class="text-xs">{{ user.name.charAt(0) }}</span>
+                                                <div class="avatar">
+                                                    <div v-if="user.avatar" class="w-8 rounded-full">
+                                                        <img :src="`/storage/${user.avatar}`" :alt="user.name"
+                                                            class="object-cover" />
+                                                    </div>
+                                                    <div v-else class="avatar placeholder">
+                                                        <div class="bg-neutral text-neutral-content rounded-full w-8">
+                                                            <span class="text-xs">{{ user.name.charAt(0) }}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <span>{{ user.name }}</span>
@@ -124,7 +127,8 @@ const toggleMember = (userId) => {
                             </div>
 
                             <div class="flex gap-2 justify-end">
-                                <button type="submit" class="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+                                <button type="submit"
+                                    class="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
                                     :disabled="!form.name.trim() || submitting">
                                     <span v-if="submitting" class="loading loading-spinner loading-sm"></span>
                                     <span v-else>Criar Sala</span>
