@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 
 class MessageController extends Controller
 {
+    /**
+     * Get all direct messages between authenticated user and specified user.
+     */
     public function index(User $user)
     {
         $authUserId = auth()->id();
@@ -29,6 +32,9 @@ class MessageController extends Controller
         return response()->json($messages);
     }
 
+    /**
+     * Store a newly created direct message.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([

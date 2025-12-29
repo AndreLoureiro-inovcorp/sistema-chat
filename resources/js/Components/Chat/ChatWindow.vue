@@ -31,15 +31,32 @@ watch(() => props.selectedUser, () => {
                 {{ selectedUser.name }}
             </div>
 
-            <div class="flex-1 p-4 overflow-y-auto bg-base-200">
-                <div v-if="messages.length === 0" class="alert alert-info">
+            <div class="flex-1 p-4 overflow-y-auto bg-base-200 max-h-[500px]">
+                <div v-if="messages.length === 0" class="text-center text-gray-500 py-8">
                     Sem mensagens ainda. Envia a primeira!
                 </div>
 
                 <div v-else class="space-y-2">
-                    <div v-for="message in messages" :key="message.id" class="chat" :class="message.user_id === $page.props.auth.user.id
+                    <div v-for="message in messages" :key="message.id" class="chat gap-2" :class="message.user_id === $page.props.auth.user.id
                         ? 'chat-end'
                         : 'chat-start'">
+
+                        <div class="chat-image avatar">
+                            <div v-if="message.user.avatar" class="w-10 rounded-full">
+                                <img :src="`/storage/${message.user.avatar}`" :alt="message.user.name"
+                                    class="object-cover" />
+                            </div>
+                            <div v-else class="avatar placeholder">
+                                <div class="bg-neutral text-neutral-content rounded-full w-10">
+                                    <span class="text-xs">{{ message.user.name.charAt(0) }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chat-header text-xs opacity-50 mb-1">
+                            {{ message.user.name }}
+                        </div>
+
                         <div class="chat-bubble" :class="message.user_id === $page.props.auth.user.id
                             ? 'chat-bubble-primary'
                             : 'chat-bubble-secondary'">

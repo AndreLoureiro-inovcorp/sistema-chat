@@ -128,6 +128,12 @@ const showingNavigationDropdown = ref(false);
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button">
                                 Log Out
                             </ResponsiveNavLink>
+                            <ResponsiveNavLink :href="route('chat')" method="post" as="button">
+                                Chat Privado
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink :href="route('rooms.index')" method="post" as="button">
+                                Salas
+                            </ResponsiveNavLink>
                         </div>
                     </div>
                 </div>

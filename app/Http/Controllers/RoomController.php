@@ -10,6 +10,9 @@ use Inertia\Inertia;
 
 class RoomController extends Controller
 {
+    /**
+     * Display a listing of the user's rooms.
+     */
     public function index()
     {
         $rooms = auth()->user()->rooms()->with('users')->get();
@@ -19,6 +22,9 @@ class RoomController extends Controller
         ]);
     }
 
+    /**
+     * Store a newly created room in storage.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -49,6 +55,9 @@ class RoomController extends Controller
         return redirect()->route('rooms.index');
     }
 
+    /**
+     * Show the form for editing the specified room.
+     */
     public function edit(Room $room)
     {
         $memberIds = $room->users->pluck('id');
@@ -62,6 +71,9 @@ class RoomController extends Controller
         ]);
     }
 
+    /**
+     * Update the specified room in storage.
+     */
     public function update(Request $request, Room $room)
     {
         $validated = $request->validate([
@@ -84,6 +96,9 @@ class RoomController extends Controller
         return redirect()->route('rooms.index');
     }
 
+    /**
+     * Remove the specified room from storage.
+     */
     public function destroy(Room $room)
     {
         if ($room->avatar) {
@@ -95,6 +110,9 @@ class RoomController extends Controller
         return redirect()->route('rooms.index');
     }
 
+    /**
+     * Add a member to the specified room.
+     */
     public function addMember(Room $room, User $user)
     {
         if ($room->users->contains($user->id)) {
@@ -106,6 +124,9 @@ class RoomController extends Controller
         return back();
     }
 
+    /**
+     * Remove a member from the specified room.
+     */
     public function removeMember(Room $room, User $user)
     {
         $room->users()->detach($user->id);
@@ -113,6 +134,9 @@ class RoomController extends Controller
         return back();
     }
 
+    /**
+     * Get all messages from the specified room.
+     */
     public function getMessages(Room $room)
     {
         $messages = $room->messages()->with('user')->oldest()->get();
@@ -120,6 +144,9 @@ class RoomController extends Controller
         return response()->json($messages);
     }
 
+    /**
+     * Store a new message in the specified room.
+     */
     public function sendMessage(Request $request, Room $room)
     {
         $validated = $request->validate([
